@@ -1,34 +1,36 @@
+import { DraggableLocation, DropResult } from "@hello-pangea/dnd";
 import React, { createContext, useState } from "react";
 
-export interface Card {
+export interface CardType {
   id: string;
   title: string;
 }
 
-export interface List {
+export interface ListType {
   id: string;
   title: string;
-  cards: Card[];
+  cards: CardType[];
 }
 
-export interface Lists {
-  [key: string]: List;
+export interface ListsType {
+  [key: string]: ListType;
 }
 
-export type ListId = string[];
+export type ListIdType = string[];
 
 export interface AllTaskType {
-  lists: Lists;
-  listId: ListId;
+  lists: ListsType;
+  listId: ListIdType;
 }
 
 interface AllTaskContextProps {
   allTask: AllTaskType;
   addTaskCard: (updatedTasks: AllTaskType) => void;
   addTaskList: (updatedTaskList: AllTaskType) => void;
+  dragEndTaskCard: (result: DropResult) => void;
 }
 
-const cards: Card[] = [
+const cards: CardType[] = [
   {
     id: "1",
     title: "테스크 1",
@@ -48,6 +50,7 @@ const initialValue: AllTaskContextProps = {
   },
   addTaskCard: () => {},
   addTaskList: () => {},
+  dragEndTaskCard: () => {},
 };
 
 export const TaskContext = createContext<AllTaskContextProps>(initialValue);
@@ -67,8 +70,40 @@ function ContextProvider({ children }: ContextProviderProps) {
     setAllTask(updatedTaskList);
   };
 
+  const dragEndTaskCard = (result: DropResult) => {
+    const { index: sourceIndex, droppableId: sourceId } = result.source;
+    const { index: destinationIndex, droppableId: destinationId } =
+      result.destination as DraggableLocation;
+
+    const { lists } = allTask;
+    const sourceList = lists[sourceId];
+
+    let updatedLists = { ...lists };
+
+    // 항목의 순서를 변경하기 위해 출발지와 목적지가 다른 경우에만 처리
+    if (sourceId !== destinationId || sourceIndex !== destinationIndex) {
+      const removedCard = sourceList.cards[sourceIndex];
+
+      const updatedCards = sourceList.cards.slice();
+      updatedCards.splice(sourceIndex, 1); // 출발지에서 항목 제거
+      updatedCards.splice(destinationIndex, 0, removedCard); // 목적지에 항목 삽입
+
+      updatedLists = {
+        ...lists,
+        [sourceId]: { ...sourceList, cards: updatedCards },
+      };
+    }
+
+    setAllTask({
+      ...allTask,
+      lists: updatedLists,
+    });
+  };
+
   return (
-    <TaskContext.Provider value={{ allTask, addTaskCard, addTaskList }}>
+    <TaskContext.Provider
+      value={{ allTask, addTaskCard, addTaskList, dragEndTaskCard }}
+    >
       {children}
     </TaskContext.Provider>
   );

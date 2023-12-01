@@ -2,17 +2,18 @@ import { useContext } from "react";
 import TaskCard from "@components/TaskCard";
 import {
   AllTaskType,
-  Card,
-  List,
-  Lists,
+  CardType,
+  ListType,
+  ListsType,
   TaskContext,
 } from "@providers/ContextProvider";
-import { Button, Flex, Heading } from "@radix-ui/themes";
+import { Button, Card, Flex, Heading } from "@radix-ui/themes";
 import { v4 as uuid } from "uuid";
+import { Droppable } from "@hello-pangea/dnd";
 
 interface TaskListProps {
   id: string;
-  lists: List;
+  lists: ListType;
 }
 
 function TaskList({ id, lists }: TaskListProps): JSX.Element {
@@ -27,9 +28,9 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
     };
 
     const addCardToSpecificList = (
-      lists: Lists,
+      lists: ListsType,
       listId: string,
-      newCard: Card
+      newCard: CardType
     ) => {
       const updatedList = {
         ...lists[listId],
@@ -46,26 +47,38 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
   };
 
   return (
-    <Flex
-      direction="column"
-      width="auto"
-      height="auto"
-      p="4"
-      style={{
-        border: "solid 2px GrayText",
-        borderRadius: "12px",
-      }}
-    >
-      <Heading size="5" align="center">
-        {title}
-      </Heading>
-      <Flex direction="column" gap="4" mt="4">
-        {cards.map((card) => {
-          return <TaskCard key={card.id} card={card} />;
-        })}
-        <Button onClick={handleAddTaskCard}>+ 추가</Button>
+    <Card size="1">
+      <Flex direction="column" width="auto" height="auto" gap="3">
+        <Heading size="5" align="center">
+          {title}
+        </Heading>
+        <Droppable droppableId={lists.id}>
+          {(provided) => {
+            return (
+              <>
+                <Flex
+                  direction="column"
+                  gap="4"
+                  mt="4"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {cards.map((card, index) => {
+                    return (
+                      card && (
+                        <TaskCard key={card.id} card={card} index={index} />
+                      )
+                    );
+                  })}
+                </Flex>
+                {provided.placeholder}
+              </>
+            );
+          }}
+        </Droppable>
+        <Button onClick={handleAddTaskCard}>+ 항목 추가</Button>
       </Flex>
-    </Flex>
+    </Card>
   );
 }
 

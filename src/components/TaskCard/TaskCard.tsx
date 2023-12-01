@@ -1,34 +1,41 @@
-import { Card } from "@providers/ContextProvider";
+import { CardType } from "@providers/ContextProvider";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
-import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Flex, IconButton, Text } from "@radix-ui/themes";
+import { Draggable } from "@hello-pangea/dnd";
 
 interface TaskCardProps {
-  card: Card;
+  card: CardType;
+  index: number;
 }
 
-function TaskCard({ card }: TaskCardProps) {
+function TaskCard({ card, index }: TaskCardProps) {
   return (
-    <Box>
-      {card && (
-        <Flex
-          direction="row"
-          justify="between"
-          align="center"
-          style={{
-            backgroundColor: "var(--gray-a2)",
-            borderRadius: "12px",
-          }}
-        >
-          <IconButton>
-            <ArrowLeftIcon />
-          </IconButton>
-          <Text>{card.title}</Text>
-          <IconButton>
-            <ArrowRightIcon />
-          </IconButton>
-        </Flex>
-      )}
-    </Box>
+    <Draggable draggableId={card.id} index={index}>
+      {(provided) => {
+        return (
+          <Flex
+            direction="row"
+            justify="between"
+            align="center"
+            style={{
+              backgroundColor: "var(--gray-a2)",
+              borderRadius: "12px",
+            }}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <IconButton>
+              <ArrowLeftIcon />
+            </IconButton>
+            <Text>{card.title}</Text>
+            <IconButton>
+              <ArrowRightIcon />
+            </IconButton>
+          </Flex>
+        );
+      }}
+    </Draggable>
   );
 }
 
