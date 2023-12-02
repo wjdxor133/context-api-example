@@ -1,15 +1,10 @@
 import { useContext } from "react";
 import TaskCard from "@components/TaskCard";
-import {
-  AllTaskType,
-  CardType,
-  ListType,
-  ListsType,
-  TaskContext,
-} from "@providers/ContextProvider";
+import { TaskContext } from "@providers/ContextProvider";
 import { Button, Card, Flex, Heading } from "@radix-ui/themes";
 import { v4 as uuid } from "uuid";
 import { Droppable } from "@hello-pangea/dnd";
+import { ListType, ListsType, CardType, AllTaskType } from "@typings/task.type";
 
 interface TaskListProps {
   id: string;

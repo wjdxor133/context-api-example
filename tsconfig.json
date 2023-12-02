@@ -30,7 +30,7 @@
       "@routes/*": ["./routes/*"],
       "@service/*": ["./service/*"],
       "@states/*": ["./states/*"],
-      "@types/*": ["./types/*"],
+      "@typings/*": ["./typings/*"],
       "@utils/*": ["./utils/*"]
     }
   },

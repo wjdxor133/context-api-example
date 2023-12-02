@@ -1,7 +1,7 @@
-import { CardType } from "@providers/ContextProvider";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { Draggable } from "@hello-pangea/dnd";
+import { CardType } from "@typings/task.type";
 
 interface TaskCardProps {
   card: CardType;
