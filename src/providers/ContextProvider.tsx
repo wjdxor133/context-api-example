@@ -45,8 +45,18 @@ const initialValue: AllTaskContextProps = {
         title: "Todo",
         cards,
       },
+      "list-2": {
+        id: "list-2",
+        title: "Doing",
+        cards: [
+          {
+            id: "2",
+            title: "테스크 2",
+          },
+        ],
+      },
     },
-    listId: ["list-1"],
+    listId: ["list-1", "list-2"],
   },
   addTaskCard: () => {},
   addTaskList: () => {},
@@ -71,26 +81,36 @@ function ContextProvider({ children }: ContextProviderProps) {
   };
 
   const dragEndTaskCard = (result: DropResult) => {
+    const { draggableId } = result;
     const { index: sourceIndex, droppableId: sourceId } = result.source;
     const { index: destinationIndex, droppableId: destinationId } =
       result.destination as DraggableLocation;
 
     const { lists } = allTask;
+
     const sourceList = lists[sourceId];
+    const destinationList = lists[destinationId];
+    const draggingCard = sourceList.cards.filter((card) => {
+      return card.id === draggableId;
+    })[0];
+
+    sourceList.cards.splice(sourceIndex, 1);
+    destinationList.cards.splice(destinationIndex, 0, draggingCard);
 
     let updatedLists = { ...lists };
 
-    // 항목의 순서를 변경하기 위해 출발지와 목적지가 다른 경우에만 처리
-    if (sourceId !== destinationId || sourceIndex !== destinationIndex) {
-      const removedCard = sourceList.cards[sourceIndex];
-
-      const updatedCards = sourceList.cards.slice();
-      updatedCards.splice(sourceIndex, 1); // 출발지에서 항목 제거
-      updatedCards.splice(destinationIndex, 0, removedCard); // 목적지에 항목 삽입
-
+    if (sourceId === destinationId) {
       updatedLists = {
         ...lists,
-        [sourceId]: { ...sourceList, cards: updatedCards },
+        [sourceId]: sourceList,
+      };
+    }
+
+    if (sourceId !== destinationId) {
+      updatedLists = {
+        ...lists,
+        [sourceId]: sourceList,
+        [destinationId]: destinationList,
       };
     }
 
