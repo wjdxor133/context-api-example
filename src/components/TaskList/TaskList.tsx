@@ -61,7 +61,12 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
                   {cards.map((card, index) => {
                     return (
                       card && (
-                        <TaskCard key={card.id} card={card} index={index} />
+                        <TaskCard
+                          key={card.id}
+                          listsId={lists.id}
+                          card={card}
+                          index={index}
+                        />
                       )
                     );
                   })}

@@ -25,6 +25,7 @@ export interface AllTaskType {
 export interface AllTaskContextProps {
   allTask: AllTaskType;
   addTaskCard: (updatedTasks: AllTaskType) => void;
+  editTaskCard: (updatedTasks: AllTaskType) => void;
   addTaskList: (updatedTaskList: AllTaskType) => void;
   dragEndTaskCard: (result: DropResult) => void;
 }

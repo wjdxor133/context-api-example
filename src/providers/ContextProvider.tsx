@@ -31,6 +31,7 @@ const initialValue: AllTaskContextProps = {
     listId: ["list-1", "list-2"],
   },
   addTaskCard: () => {},
+  editTaskCard: () => {},
   addTaskList: () => {},
   dragEndTaskCard: () => {},
 };
@@ -45,6 +46,10 @@ function ContextProvider({ children }: ContextProviderProps) {
   const [allTask, setAllTask] = useState<AllTaskType>(initialValue.allTask);
 
   const addTaskCard = (updatedTasks: AllTaskType) => {
+    setAllTask(updatedTasks);
+  };
+
+  const editTaskCard = (updatedTasks: AllTaskType) => {
     setAllTask(updatedTasks);
   };
 
@@ -94,7 +99,13 @@ function ContextProvider({ children }: ContextProviderProps) {
 
   return (
     <TaskContext.Provider
-      value={{ allTask, addTaskCard, addTaskList, dragEndTaskCard }}
+      value={{
+        allTask,
+        addTaskCard,
+        editTaskCard,
+        addTaskList,
+        dragEndTaskCard,
+      }}
     >
       {children}
     </TaskContext.Provider>
