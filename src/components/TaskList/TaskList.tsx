@@ -23,8 +23,6 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
   const { allTask, addTaskCard, updatedTaskBoard } = useContext(TaskContext);
   const { title, cards } = lists;
 
-  console.log("allTask", allTask);
-
   const handleAddTaskCard = () => {
     const input = prompt("할일을 입력해주새요", "");
     const newCard = {
