@@ -30,6 +30,7 @@ const initialValue: AllTaskContextProps = {
     },
     listId: ["list-1", "list-2"],
   },
+  updatedTaskBoard: () => {},
   addTaskCard: () => {},
   editTaskCard: () => {},
   addTaskList: () => {},
@@ -44,6 +45,10 @@ interface ContextProviderProps {
 
 function ContextProvider({ children }: ContextProviderProps) {
   const [allTask, setAllTask] = useState<AllTaskType>(initialValue.allTask);
+
+  const updatedTaskBoard = (updatedTasks: AllTaskType) => {
+    setAllTask(updatedTasks);
+  };
 
   const addTaskCard = (updatedTasks: AllTaskType) => {
     setAllTask(updatedTasks);
@@ -101,6 +106,7 @@ function ContextProvider({ children }: ContextProviderProps) {
     <TaskContext.Provider
       value={{
         allTask,
+        updatedTaskBoard,
         addTaskCard,
         editTaskCard,
         addTaskList,

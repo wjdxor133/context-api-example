@@ -1,10 +1,18 @@
 import { useContext } from "react";
 import TaskCard from "@components/TaskCard";
 import { TaskContext } from "@providers/ContextProvider";
-import { Button, Card, Flex, Heading } from "@radix-ui/themes";
+import {
+  Button,
+  Card,
+  DropdownMenu,
+  Flex,
+  Heading,
+  IconButton,
+} from "@radix-ui/themes";
 import { v4 as uuid } from "uuid";
 import { Droppable } from "@hello-pangea/dnd";
 import { ListType, ListsType, CardType, AllTaskType } from "@typings/task.type";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 interface TaskListProps {
   id: string;
@@ -12,8 +20,10 @@ interface TaskListProps {
 }
 
 function TaskList({ id, lists }: TaskListProps): JSX.Element {
-  const { allTask, addTaskCard } = useContext(TaskContext);
+  const { allTask, addTaskCard, updatedTaskBoard } = useContext(TaskContext);
   const { title, cards } = lists;
+
+  console.log("allTask", allTask);
 
   const handleAddTaskCard = () => {
     const input = prompt("할일을 입력해주새요", "");
@@ -41,12 +51,48 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
     addTaskCard(updatedAllTask as AllTaskType);
   };
 
+  const handleRemoveList = () => {
+    const removedListId = allTask.listId.filter((listId) => listId !== id);
+    const removedLists = Object.fromEntries(
+      Object.entries(allTask.lists).filter(([key]) => key !== id)
+    );
+
+    const updatedAllTask = {
+      ...allTask,
+      listId: removedListId,
+      lists: removedLists,
+    };
+
+    updatedTaskBoard(updatedAllTask as AllTaskType);
+  };
+
   return (
     <Card size="1">
       <Flex direction="column" width="auto" height="auto" gap="3">
         <Heading size="5" align="center">
           {title}
         </Heading>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton
+              variant="ghost"
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 18,
+                cursor: "pointer",
+              }}
+            >
+              <DotsVerticalIcon width="18" height="18" />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item onClick={handleRemoveList}>
+              삭제
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+
         <Droppable droppableId={lists.id}>
           {(provided) => {
             return (
