@@ -20,7 +20,7 @@ interface TaskListProps {
 }
 
 function TaskList({ id, lists }: TaskListProps): JSX.Element {
-  const { allTask, addTaskCard, updatedTaskBoard } = useContext(TaskContext);
+  const { allTask, updatedTaskBoard } = useContext(TaskContext);
   const { title, cards } = lists;
 
   const handleAddTaskCard = () => {
@@ -46,7 +46,7 @@ function TaskList({ id, lists }: TaskListProps): JSX.Element {
     const updatedLists = addCardToSpecificList(allTask.lists, id, newCard);
     const updatedAllTask = { ...allTask, lists: updatedLists };
 
-    addTaskCard(updatedAllTask as AllTaskType);
+    updatedTaskBoard(updatedAllTask as AllTaskType);
   };
 
   const handleRemoveList = () => {

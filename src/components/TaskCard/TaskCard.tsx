@@ -20,7 +20,7 @@ interface TaskCardProps {
 }
 
 function TaskCard({ listsId, card, index }: TaskCardProps) {
-  const { allTask, editTaskCard, updatedTaskBoard } = useContext(TaskContext);
+  const { allTask, updatedTaskBoard } = useContext(TaskContext);
   const [title, setTitle] = useState(card.title);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -61,7 +61,7 @@ function TaskCard({ listsId, card, index }: TaskCardProps) {
     const updatedLists = editCardToSpecificList(allTask.lists, listsId);
     const updatedAllTask = { ...allTask, lists: updatedLists };
 
-    editTaskCard(updatedAllTask as AllTaskType);
+    updatedTaskBoard(updatedAllTask as AllTaskType);
   };
 
   const handleRemoveTaskCard = () => {

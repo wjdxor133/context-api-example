@@ -4,7 +4,7 @@ import { Button } from "@radix-ui/themes";
 import { v4 as uuid } from "uuid";
 
 function AddTaskButton(): JSX.Element {
-  const { allTask, addTaskList } = useContext(TaskContext);
+  const { allTask, updatedTaskBoard } = useContext(TaskContext);
 
   const handleAddTaskList = () => {
     const input = prompt("목록을 이름을 입력해주새요", "");
@@ -24,7 +24,7 @@ function AddTaskButton(): JSX.Element {
       },
     };
 
-    addTaskList(newAllTask);
+    updatedTaskBoard(newAllTask);
   };
 
   return <Button onClick={handleAddTaskList}>+ 목록 추가</Button>;
