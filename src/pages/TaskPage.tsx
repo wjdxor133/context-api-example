@@ -1,26 +1,47 @@
 import { useContext } from "react";
 import { TaskContext } from "providers/ContextProvider";
 import { Container, Grid } from "@radix-ui/themes";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import TaskList from "@components/TaskList";
 import AddTaskButton from "@components/AddTaskButton";
 
 function TaskPage() {
   const {
     allTask: { lists, listId },
-    dragEndTaskCard,
+    dragEndTaskItem,
   } = useContext(TaskContext);
 
   return (
     <Container size="4">
-      <Grid columns="4" gap="3" width="auto" height="auto">
-        <DragDropContext onDragEnd={dragEndTaskCard}>
-          {listId.map((id) => {
-            return <TaskList key={id} id={id} lists={lists[id]} />;
-          })}
-          <AddTaskButton />
-        </DragDropContext>
-      </Grid>
+      <DragDropContext onDragEnd={dragEndTaskItem}>
+        <Droppable droppableId="all-task" type="list" direction="horizontal">
+          {(provided) => (
+            <Grid
+              columns="4"
+              gap="3"
+              width="auto"
+              height="auto"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              <>
+                {listId.map((id, index) => {
+                  return (
+                    <TaskList
+                      key={id}
+                      id={id}
+                      lists={lists[id]}
+                      index={index}
+                    />
+                  );
+                })}
+                {listId.length < 4 && <AddTaskButton />}
+                {provided.placeholder}
+              </>
+            </Grid>
+          )}
+        </Droppable>
+      </DragDropContext>
     </Container>
   );
 }

@@ -31,7 +31,7 @@ const initialValue: AllTaskContextProps = {
     listId: ["list-1", "list-2"],
   },
   updatedTaskBoard: () => {},
-  dragEndTaskCard: () => {},
+  dragEndTaskItem: () => {},
 };
 
 export const TaskContext = createContext<AllTaskContextProps>(initialValue);
@@ -47,13 +47,22 @@ function ContextProvider({ children }: ContextProviderProps) {
     setAllTask(updatedTasks);
   };
 
-  const dragEndTaskCard = (result: DropResult) => {
-    const { draggableId } = result;
+  const dragEndTaskItem = (result: DropResult) => {
+    const { destination, draggableId, type } = result;
     const { index: sourceIndex, droppableId: sourceId } = result.source;
     const { index: destinationIndex, droppableId: destinationId } =
-      result.destination as DraggableLocation;
+      destination as DraggableLocation;
 
-    const { lists } = allTask;
+    const { lists, listId } = allTask;
+
+    if (!destination) return;
+
+    if (type === "list") {
+      const newListIds = listId;
+      newListIds.splice(sourceIndex, 1);
+      newListIds.splice(destinationIndex, 0, draggableId);
+      return;
+    }
 
     const sourceList = lists[sourceId];
     const destinationList = lists[destinationId];
@@ -92,7 +101,7 @@ function ContextProvider({ children }: ContextProviderProps) {
       value={{
         allTask,
         updatedTaskBoard,
-        dragEndTaskCard,
+        dragEndTaskItem,
       }}
     >
       {children}
