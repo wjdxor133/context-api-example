@@ -31,6 +31,8 @@ function TaskList({ id, lists, index }: TaskListProps): JSX.Element {
       title: input ?? "",
     };
 
+    if (!input) return;
+
     const addCardToSpecificList = (
       lists: ListsType,
       listId: string,
@@ -68,7 +70,7 @@ function TaskList({ id, lists, index }: TaskListProps): JSX.Element {
   return (
     <Draggable draggableId={lists.id} index={index}>
       {(provided) => (
-        <Card size="2" ref={provided.innerRef} {...provided.draggableProps}>
+        <Card size="3" ref={provided.innerRef} {...provided.draggableProps}>
           <Flex
             direction="column"
             width="auto"

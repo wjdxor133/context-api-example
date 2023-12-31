@@ -9,6 +9,8 @@ function AddTaskButton(): JSX.Element {
   const handleAddTaskList = () => {
     const input = prompt("목록을 이름을 입력해주새요", "");
 
+    if (!input) return;
+
     const newListId = uuid();
     const newList = {
       id: newListId,
